@@ -1,8 +1,9 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { AlertCircle, Loader2, LogOut, RefreshCw } from 'lucide-react';
+import { AlertCircle, Download, Loader2, LogOut, RefreshCw } from 'lucide-react';
 import Logo from '@/components/Logo';
 import QuoteRequestDetail from '@/components/admin/QuoteRequestDetail';
 import QuoteRequestList from '@/components/admin/QuoteRequestList';
+import { downloadQuoteRequestsCsv } from '@/lib/quoteRequestsExport';
 import { fetchQuoteRequests, type QuoteRequestRecord } from '@/lib/quoteRequestsAdmin';
 import type { ClientType } from '@/lib/quoteRequests';
 
@@ -63,6 +64,15 @@ export default function QuoteRequestsDashboard({ onSignOut, isSigningOut, signOu
             <span className="text-sm font-semibold uppercase tracking-widest text-slate-500">Administration</span>
           </div>
           <div className="flex items-center gap-2">
+            <button
+              type="button"
+              onClick={() => downloadQuoteRequestsCsv(requests)}
+              disabled={requests.length === 0}
+              className="inline-flex items-center gap-2 rounded-full border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-800 transition-colors hover:bg-slate-50 disabled:opacity-50"
+            >
+              <Download className="h-4 w-4" aria-hidden="true" />
+              Exporter (CSV)
+            </button>
             <button
               type="button"
               onClick={() => void loadRequests()}
