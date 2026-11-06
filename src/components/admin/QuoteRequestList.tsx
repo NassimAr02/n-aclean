@@ -4,8 +4,8 @@ import type { QuoteRequestRecord } from '@/lib/quoteRequestsAdmin';
 
 interface QuoteRequestListProps {
   requests: QuoteRequestRecord[];
-  selectedId: string | null;
-  onSelect: (id: string) => void;
+  selectedId: number | null;
+  onSelect: (id: number) => void;
 }
 
 export default function QuoteRequestList({ requests, selectedId, onSelect }: QuoteRequestListProps) {

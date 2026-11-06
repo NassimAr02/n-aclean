@@ -1,0 +1,17 @@
+# Ce fichier est nécessaire sur Hostinger (Apache) : il fait fonctionner les pages du site,
+# y compris /admin, et laisse passer les appels vers l'API PHP.
+
+Options -MultiViews
+
+<Files "config.php">
+  Require all denied
+</Files>
+
+RewriteEngine On
+RewriteBase /
+
+RewriteRule ^api/ - [L]
+
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^ index.html [L]

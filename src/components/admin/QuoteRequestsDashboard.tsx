@@ -26,7 +26,7 @@ export default function QuoteRequestsDashboard({ onSignOut, isSigningOut, signOu
   const [isLoading, setIsLoading] = useState(true);
   const [loadError, setLoadError] = useState<string | null>(null);
   const [filter, setFilter] = useState<ClientFilter>('all');
-  const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [selectedId, setSelectedId] = useState<number | null>(null);
 
   const loadRequests = useCallback(async () => {
     setIsLoading(true);

@@ -1,38 +1,23 @@
-import { supabase } from '@/lib/supabase';
+import { getJson, postJson } from '@/lib/api';
 
-function translateAuthError(message: string): string {
-  if (message.includes('Invalid login credentials')) return 'Email ou mot de passe incorrect.';
-  if (message.includes('already registered')) return 'Un compte existe déjà avec cet email.';
-  if (/at least \d+ characters/.test(message)) return 'Le mot de passe est trop court.';
-  if (message.includes('Failed to fetch') || message.includes('NetworkError')) {
-    return 'Connexion impossible. Vérifiez votre réseau et réessayez.';
-  }
-  return 'Une erreur est survenue. Merci de réessayer.';
+export interface AdminSession {
+  authenticated: boolean;
+  email: string | null;
+  needsSetup: boolean;
 }
 
-export async function signInAdmin(email: string, password: string): Promise<void> {
-  const { error } = await supabase.auth.signInWithPassword({ email, password });
-  if (error) throw new Error(translateAuthError(error.message));
+export function fetchAdminSession(): Promise<AdminSession> {
+  return getJson<AdminSession>('/api/admin/session.php');
 }
 
-export async function signUpAdmin(email: string, password: string): Promise<boolean> {
-  const { data, error } = await supabase.auth.signUp({ email, password });
-  if (error) throw new Error(translateAuthError(error.message));
-  return data.session !== null;
+export async function loginAdmin(email: string, password: string): Promise<void> {
+  await postJson('/api/admin/login.php', { email, password });
 }
 
-export async function signOutAdmin(): Promise<void> {
-  const { error } = await supabase.auth.signOut();
-  if (error) throw new Error(translateAuthError(error.message));
+export async function setupAdmin(email: string, password: string, setupToken: string): Promise<void> {
+  await postJson('/api/admin/setup.php', { email, password, setup_token: setupToken });
 }
 
-export async function fetchIsAdmin(userId: string): Promise<boolean> {
-  const { data, error } = await supabase
-    .from('admin_users')
-    .select('user_id')
-    .eq('user_id', userId)
-    .maybeSingle();
-
-  if (error) throw new Error(error.message);
-  return data !== null;
+export async function logoutAdmin(): Promise<void> {
+  await postJson('/api/admin/logout.php', {});
 }

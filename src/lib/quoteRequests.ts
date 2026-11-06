@@ -1,4 +1,4 @@
-import { supabase } from '@/lib/supabase';
+import { postJson } from '@/lib/api';
 
 export type ClientType = 'particulier' | 'professionnel';
 
@@ -30,11 +30,6 @@ export interface QuoteRequestPayload {
 }
 
 export async function submitQuoteRequest(payload: QuoteRequestPayload): Promise<void> {
-  const { data, error } = await supabase.functions.invoke<{ ok?: boolean }>('submit-quote-request', {
-    body: payload,
-  });
-
-  if (error || !data?.ok) {
-    throw new Error(error?.message ?? 'Quote request failed');
-  }
+  await postJson<{ ok: true }>('/api/quote-requests.php', payload);
 }
+
