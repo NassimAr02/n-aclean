@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 const ADMIN_SESSION_IDLE_SECONDS = 7200;
 
+ini_set('display_errors', '0');
+
 function app_config(): array
 {
     return require __DIR__ . '/config.php';
@@ -39,7 +41,7 @@ function read_json_body(): array
         json_response(['error' => 'Requête invalide.'], 400);
     }
 
-    if (!is_array($data) || array_is_list($data)) {
+    if (!is_array($data)) {
         json_response(['error' => 'Requête invalide.'], 400);
     }
 
